@@ -10,6 +10,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "tasks")
+@Data
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,21 +32,5 @@ public class Task {
 
     public Task() {
 
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public boolean isComplete() {
-        return isComplete;
     }
 }
