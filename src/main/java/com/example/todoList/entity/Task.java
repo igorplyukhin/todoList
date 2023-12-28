@@ -2,10 +2,9 @@ package com.example.todoList.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
+import java.util.List;
 
 
 @Entity
@@ -18,16 +17,19 @@ public class Task {
 
     private String name;
     private String description;
-    //    @ManyToOne
-    //    @JoinColumn(name = "category_id")
-    //    private Category category;
+    @ManyToMany
+    private List<Category> categories;
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
     private boolean isComplete;
 
-    public Task(String category, String name, String description) {
-
+    public Task(List<Category> categories, String name, String description, User user) {
+        this.categories = categories;
         this.name = name;
         this.description = description;
         this.isComplete = false;
+        this.user = user;
     }
 
     public Task() {

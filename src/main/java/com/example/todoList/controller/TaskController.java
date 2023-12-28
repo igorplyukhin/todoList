@@ -1,40 +1,58 @@
 package com.example.todoList.controller;
 
+import com.example.todoList.entity.Category;
 import com.example.todoList.entity.Task;
+import com.example.todoList.repository.CategoryRepository;
 import com.example.todoList.repository.TaskRepository;
+import com.example.todoList.repository.UserRepository;
+import com.example.todoList.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 @Controller
 @RequestMapping(path = "/tasks")
 public class TaskController {
 
+
     @Autowired
-    private TaskRepository repository;
+    private TaskRepository taskRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TaskService taskService;
 
     @GetMapping("")
     public @ResponseBody Iterable<Task> getAll() {
-        return repository.findAll();
+        return taskRepository.findAll();
     }
 
     @PostMapping("/add")
     public @ResponseBody ResponseEntity<HttpStatus> addItem(@RequestParam String name,
-                                                            @RequestParam String category,
-                                                            @RequestParam String description) {
-        var item = new Task(category, name, description);
-        repository.save(item);
+                                                            @RequestParam String[] categories,
+                                                            @RequestParam String description,
+                                                            @RequestParam String username) {
+        var user = userRepository.findByUsername(username).get();
+        var categoryList = new ArrayList<Category>();
+        for (String e : categories) {
+            var optionalCategory = categoryRepository.findByName(e);
+            if (optionalCategory.isPresent()) {
+                categoryList.add(optionalCategory.get());
+            } else {
+                var c = new Category(e);
+                categoryRepository.save(c);
+                categoryList.add(c);
+            }
+        }
+        taskRepository.save(new Task(categoryList, name, description, user));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
-    public @ResponseBody ResponseEntity<HttpStatus> updateItem(@RequestParam String name,
-                                                               @RequestParam String category,
-                                                               @RequestParam String description) {
-        var item = new Task(category, name, description);
-        repository.save(item);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+
 }

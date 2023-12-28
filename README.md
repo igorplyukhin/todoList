@@ -6,6 +6,7 @@ Task - задача из todoList
 * description
 * category
 * isComplete
+* user
 
 Category - сущность для группировки задач по категориям 
 * id

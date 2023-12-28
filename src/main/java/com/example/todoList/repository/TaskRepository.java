@@ -1,6 +1,7 @@
 package com.example.todoList.repository;
 
 import com.example.todoList.entity.Task;
+import com.example.todoList.entity.User;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,8 +12,12 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
 
     @Override
-    Optional<Task> findById(Long aLong);
+    Optional<Task> findById(Long id);
+
+
+    Optional<List<Task>> findByUser(User user);
 
     @Override
     List<Task> findAll();
+
 }

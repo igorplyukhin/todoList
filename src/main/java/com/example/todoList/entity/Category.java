@@ -1,14 +1,12 @@
 package com.example.todoList.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 
 @Entity
+@Table(name = "categories")
 @Data
 public class Category {
     @Id
@@ -16,8 +14,7 @@ public class Category {
     private Long id;
     private String name;
 
-    public Category(Long id, String name) {
-        this.id = id;
+    public Category(String name) {
         this.name = name;
     }
 
