@@ -2,6 +2,7 @@ package com.example.todoList.controller;
 
 import com.example.todoList.entity.Category;
 import com.example.todoList.entity.Task;
+import com.example.todoList.entity.User;
 import com.example.todoList.repository.CategoryRepository;
 import com.example.todoList.repository.TaskRepository;
 import com.example.todoList.repository.UserRepository;
@@ -9,6 +10,7 @@ import com.example.todoList.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,9 +38,9 @@ public class TaskController {
     @PostMapping("/add")
     public @ResponseBody ResponseEntity<HttpStatus> addItem(@RequestParam String name,
                                                             @RequestParam String[] categories,
-                                                            @RequestParam String description,
-                                                            @RequestParam String username) {
-        var user = userRepository.findByUsername(username).get();
+                                                            @RequestParam String description) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var user = (User) authentication.getPrincipal();
         var categoryList = new ArrayList<Category>();
         for (String e : categories) {
             var optionalCategory = categoryRepository.findByName(e);
